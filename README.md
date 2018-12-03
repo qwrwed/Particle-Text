@@ -1,2 +1,2 @@
-# particle-clock
+# Particle-Clock
 Particle Clock in JS
