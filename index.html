@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Particle Text Demonstration</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
+	<script src="Vehicle.js"></script>
+	<script src="particle-text.js"></script>
+</head>
+
+<body>
+	<script type="application/javascript">
+	let bounds = [1000, 500];
+	let myFont;
+	
+	function preload(){
+		myFont = loadFont('AvenirNextLTPro-Demi.otf');
+	}
+		
+	var ps;
+
+
+	function setup() {
+		createCanvas(bounds[0], bounds[1]);
+		background(51);
+		ps = new ParticleString("Hello, world!", myFont, 400, height/2)
+	}
+		
+		function draw() {
+			background(51);
+			ps.draw();
+		}
+
+		/*
+		function windowResized() {
+			resizeCanvas(bounds[0], bounds[1]);
+		}
+		*/
+	
+	</script>
+</body>
+
+</html>

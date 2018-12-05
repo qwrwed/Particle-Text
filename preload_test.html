@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
+</head>
+
+<body>
+	<script type="application/javascript">
+	let bounds = [1000, 500];
+	
+	
+	class myClass{
+		/*
+		function continueSetup(){
+			/*this.fontSize = 40;
+			var myBounds1 = font.textBounds(this.myText, 0, 0, this.fontSize);
+			var myBounds2 = this.font.textBounds(this.myText, 0, 0, this.fontSize);
+			
+			console.log("test")
+		}
+		*/
+		
+		constructor(string, font){
+			self = this;
+			this.string = string;
+			this.font = font;
+			//this.font = loadFont('AvenirNextLTPro-Demi.otf', this.constructor2);
+		}
+		
+		constructor2(){
+			console.log("myFunction is running")
+			self.fontSize = 40;
+			self.myBounds1 = self.font.textBounds(self.myText, 0, 0, self.fontSize);
+			self.myBounds2 = self.font.textBounds(self.myText, 0, 0, self.fontSize);
+			
+			console.log("test")
+		}
+	}
+
+
+	var ps;
+	var font;
+	
+	/*
+	function setup() {
+		createCanvas(bounds[0], bounds[1]);
+		a = new MyClass("string", width/2, height/2)
+	}*/
+	var myThing;
+	var teststr
+	var myFont
+	function preload(){
+		//();//.font = loadFont('AvenirNextLTPro-Demi.otf');
+		myFont = loadFont('AvenirNextLTPro-Demi.otf');
+		teststr = "test"; 
+	}
+	
+	function setup(){
+		console.log(teststr);
+		myThing = new myClass("test", myFont);
+		console.log(myThing.font);
+	}
+	
+	</script>
+</body>
+
+</html>

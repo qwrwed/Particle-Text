@@ -1,3 +1,4 @@
+
 // Most of this is by Daniel Shiffman
 // http://codingtra.in
 // Steering Text Paths
@@ -15,6 +16,10 @@ var maxChangeForce = 0;
 var instructions = [];
 var insText = 'Particle Clock';
 
+
+var myList = []
+var myText = 'Sample Text';
+
 function preload() {
     font = loadFont('AvenirNextLTPro-Demi.otf');
 }
@@ -22,7 +27,7 @@ function preload() {
 function setup() {
     createCanvas(1000, 500);
     background(51);
-
+	/*
     var bounds = font.textBounds(formattedTime, 0, 0, 192);
     var posx = width / 2 - bounds.w / 2;
     var posy = height / 2 + bounds.h / 2;
@@ -42,16 +47,23 @@ function setup() {
     var posyIns = height / 6 + boundsIns.h / 2;
 
     var insAr = split(insText, ' ');
-
+	//split text into list of words using space separator
+	
     for (var i = 0; i < insAr.length; i++) {
+	//for i in the range of [0 : length of the list]
         var bounds2 = font.textBounds(insAr[i], 0, 0, 30);
+		//get the bounds of the current word of text
         var posx2 = posxIns;
+		// set the xpos of the current word to (initially) the xpos of the full string
         var posy2 = posyIns;
+		// set the ypos of the current word to the xpos of the full string
 
         posxIns += bounds2.w + 10;
-
+		// move the xpos along by the size of the word, plus 10
+		
         var points2 = font.textToPoints(insAr[i], posx2, posy2, 30, {
             sampleFactor: 0.3
+			//convert.
         });
 
         for (var j = 0; j < points2.length; j++) {
@@ -60,13 +72,42 @@ function setup() {
             instructions.push(v);
         }
     }
+	*/
+	
+	var myFontSize = 40
+	var myParticleSize = 3
+	var myBounds = font.textBounds(myText, 0, 0, myFontSize);
+	//font.textBounds(lineOfText, xpos, ypos, fontSize);
+	
+	//positioning:
+	/*
+	var myPosx = width / 2 - myBounds.w / 2;
+    var myPosy = height / 2 + myBounds.h / 2;
+	*/
+	
+	var myPosx = 10;
+	var myPosy = 20;
+	
+	//conversion:
+	var mySampleFactor = 0.3
+	var myPoints = font.textToPoints(myText, myPosx, myPosy, myFontSize, {
+            sampleFactor: mySampleFactor
+    });
+	
+	for (var i = 0; i < myPoints.length; i++) {
+        var myPt = myPoints[i];
+        var myVehicle = new Vehicle(myPt.x, myPt.y, myParticleSize);
+        myList.push(myVehicle);
+    }
 }
+
 
 function draw() {
     background(51);
   
-  calcTime();
-
+//  calcTime();
+	
+	
     for (var i = 0; i < instructions.length; i++) {
         var v = instructions[i];
         v.behaviors();
@@ -74,13 +115,23 @@ function draw() {
         v.show();
     }
 
+	/*
     for (var i = 0; i < vehicles.length; i++) {
         var v = vehicles[i];
         v.behaviors();
         v.update();
         v.show();
-    }
+    }*/
+	
+	
+	for (var i = 0; i < myList.length; i++) {
+		var v = myList[i];
+		v.behaviors();
+		v.update();
+		v.show();
+	}
 }
+
 
 function calcTime() {
   var hours = hour();
@@ -96,11 +147,12 @@ function calcTime() {
   }
 }
 
+/*
 function updateText(newText) {
     //nextT++;
     //if (nextT > texts.length - 1) {
         //nextT = 0;
-    //}
+    // }
 
   formattedTime = newText;
     var bounds = font.textBounds(formattedTime, 0, 0, 192);
@@ -150,4 +202,16 @@ function updateText(newText) {
             vehicles[i].applyForce(force);
         }
     }
+}*/
+
+
+class ParticleString{
+	constructor(x,y,r){
+		this.xdisp = x;
+		this.ydisp = y;
+		this.radius = r;
+	}
+	draw(){
+		ellipse(this.xdisp, this.ydisp, this.radius*2, this.radius*2);
+	}
 }
