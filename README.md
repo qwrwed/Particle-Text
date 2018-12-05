@@ -1,2 +1,2 @@
-# Particle-Clock
-Particle Clock in JS
+# Particle-Text
+Display text using particles in JS
