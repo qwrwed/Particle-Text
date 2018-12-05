@@ -5,37 +5,64 @@
 	<title>Particle Text Demonstration</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
 	<script src="Vehicle.js"></script>
+	<script src="particle-clock.js"></script>
 	<script src="particle-text.js"></script>
 </head>
 
 <body>
 	<script type="application/javascript">
+	/*
 	let bounds = [1000, 500];
-	let myFont;
+	let font;
 	
 	function preload(){
-		myFont = loadFont('AvenirNextLTPro-Demi.otf');
+		font = loadFont('AvenirNextLTPro-Demi.otf');
 	}
 		
 	var ps;
 
-
+	*/
+	var count = 0;
+	var alphaString = String.fromCharCode(97 + count);
+	var startTime, currTime;
 	function setup() {
-		createCanvas(bounds[0], bounds[1]);
-		background(51);
-		ps = new ParticleString("Hello, world!", myFont, 400, height/2)
+		clockSetup();
+		//createCanvas(bounds[0], bounds[1]);
+		//background(51);
+		ps = new ParticleString("Hello, world!", font, width*0.1, height*0.9);
+		startTime = new Date();
+		ps2 = new ParticleString("Hello, world!", font, width*0.2, height*0.8);
+		a = new ParticleString(alphaString, font, 100, 100);
+		
 	}
 		
-		function draw() {
-			background(51);
-			ps.draw();
+	function draw() {
+		console.log(alphaString)
+		//console.log(countString)
+		currTime = new Date();
+		timeDiff = (currTime - startTime)/1000;
+		
+		if (timeDiff > 1){
+			startTime = new Date();
+			count = (count + 1) % 26;
+			alphaString = String.fromCharCode(97 + count);
+			a.updateText(alphaString);
+			
 		}
+		
+		
+		clockDraw();
+		//background(51);
+		ps.draw();
+		a.draw();
+		ps2.draw();
+	}
 
-		/*
-		function windowResized() {
-			resizeCanvas(bounds[0], bounds[1]);
-		}
-		*/
+	/*
+	function windowResized() {
+		resizeCanvas(bounds[0], bounds[1]);
+	}
+	*/
 	
 	</script>
 </body>

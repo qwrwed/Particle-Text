@@ -13,8 +13,8 @@ function Vehicle(x, y, size) {
     } else {
         this.r = 8;
     }
-    this.maxspeed = 10;
-    this.maxforce =1;
+    this.maxspeed = 20;
+    this.maxforce = 2;
 }
 
 Vehicle.prototype.behaviors = function () {
@@ -74,7 +74,7 @@ Vehicle.prototype.flee = function (target) {
 }
 
 Vehicle.prototype.clone = function () {
-    var v = new Vehicle(this.pos.x, this.pos.y);
+    var v = new Vehicle(this.pos.x, this.pos.y, this.r);
 
     v.pos.x = this.pos.x;
     v.pos.y = this.pos.y;
@@ -85,5 +85,8 @@ Vehicle.prototype.clone = function () {
     v.acc.x = this.acc.x;
     v.acc.y = this.acc.y;
 
+	v.r = this.r;
+	//make sure clone inherits radius too
+	
     return v;
 }

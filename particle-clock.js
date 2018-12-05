@@ -17,17 +17,14 @@ var instructions = [];
 var insText = 'Particle Clock';
 
 
-var myList = []
-var myText = 'Sample Text';
-
 function preload() {
     font = loadFont('AvenirNextLTPro-Demi.otf');
 }
 
-function setup() {
+function clockSetup() {
     createCanvas(1000, 500);
     background(51);
-	/*
+	
     var bounds = font.textBounds(formattedTime, 0, 0, 192);
     var posx = width / 2 - bounds.w / 2;
     var posy = height / 2 + bounds.h / 2;
@@ -72,40 +69,13 @@ function setup() {
             instructions.push(v);
         }
     }
-	*/
-	
-	var myFontSize = 40
-	var myParticleSize = 3
-	var myBounds = font.textBounds(myText, 0, 0, myFontSize);
-	//font.textBounds(lineOfText, xpos, ypos, fontSize);
-	
-	//positioning:
-	/*
-	var myPosx = width / 2 - myBounds.w / 2;
-    var myPosy = height / 2 + myBounds.h / 2;
-	*/
-	
-	var myPosx = 10;
-	var myPosy = 20;
-	
-	//conversion:
-	var mySampleFactor = 0.3
-	var myPoints = font.textToPoints(myText, myPosx, myPosy, myFontSize, {
-            sampleFactor: mySampleFactor
-    });
-	
-	for (var i = 0; i < myPoints.length; i++) {
-        var myPt = myPoints[i];
-        var myVehicle = new Vehicle(myPt.x, myPt.y, myParticleSize);
-        myList.push(myVehicle);
-    }
 }
 
 
-function draw() {
+function clockDraw() {
     background(51);
   
-//  calcTime();
+    calcTime();
 	
 	
     for (var i = 0; i < instructions.length; i++) {
@@ -115,21 +85,12 @@ function draw() {
         v.show();
     }
 
-	/*
     for (var i = 0; i < vehicles.length; i++) {
         var v = vehicles[i];
         v.behaviors();
         v.update();
         v.show();
-    }*/
-	
-	
-	for (var i = 0; i < myList.length; i++) {
-		var v = myList[i];
-		v.behaviors();
-		v.update();
-		v.show();
-	}
+    }
 }
 
 
@@ -147,7 +108,7 @@ function calcTime() {
   }
 }
 
-/*
+
 function updateText(newText) {
     //nextT++;
     //if (nextT > texts.length - 1) {
@@ -202,16 +163,4 @@ function updateText(newText) {
             vehicles[i].applyForce(force);
         }
     }
-}*/
-
-
-class ParticleString{
-	constructor(x,y,r){
-		this.xdisp = x;
-		this.ydisp = y;
-		this.radius = r;
-	}
-	draw(){
-		ellipse(this.xdisp, this.ydisp, this.radius*2, this.radius*2);
-	}
 }
