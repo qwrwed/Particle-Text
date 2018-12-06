@@ -1,26 +1,25 @@
 class ParticleString{
 	
-	
-	constructor(string, font, x, y){
-		this.xdisp = x;
-		this.ydisp = y;
-		this.textString = string;
+	//constructor(string, font, x, y){
+	constructor(string, font, args){
+		this.posX = args.x || 50;
+		this.posY = args.y || 50;
+		this.textString = string || "No string set";
 		this.radius = 20;
 		//this.font = loadFont('AvenirNextLTPro-Demi.otf');
 		this.font = font;
 		this.vehicleList = [];
-		this.fontSize = 40;
-		this.particleSize = 3;
+		this.fontSize = args.fontSize || 40;
 		
-		//font.textBounds(lineOfText, xpos, ypos, fontSize);
-		var bounds = font.textBounds(this.textString, 0, 0, this.fontSize);
+		this.particleSize = 0.03*this.fontSize;
+		this.sampleFactor = 20 * 1/this.fontSize
+		
+		var bounds = this.font.textBounds(this.textString, 0, 0, this.fontSize);
 		
 		//positioning:
-		this.posX = x;
-		this.posY = y;
+		//this.posX = x;
+		//this.posY = y;
 	
-		//conversion:
-		this.sampleFactor = 0.3
 		var points = font.textToPoints(this.textString, this.posX, this.posY, this.fontSize, {
             sampleFactor: this.sampleFactor
 		});
@@ -43,6 +42,7 @@ class ParticleString{
 	}
 	
 	updateText(string) {
+		var maxChangeForce = 0;
 		//update the text string:
 		this.textString = string;
 		
@@ -81,5 +81,39 @@ class ParticleString{
 		this.vehicleList[i].applyForce(force);
 		}
 	}
+	
 }
+
+class ParticleClock extends ParticleString{
+	constructor(font, args){
+		args.x = args.x || 100;
+		args.y = args.y || 325;
+		args.fontSize = args.fontSize || 192;
+		super("abcd", font, args)
+		this.prevSec = -1;
+	}
+	
+	draw() {
+		
+		var hours = hour();
+		var minutes = minute();
+		var seconds = second();
+		
+		if(seconds != this.prevSec) {
+			this.prevSec = seconds;
+			hours = nf(hours, 2, 0);
+			minutes = nf(minutes, 2, 0);
+			seconds = nf(seconds, 2, 0);
+			this.updateText(hours + ":" + minutes + ":" + seconds);
+		}
+		
+		for (var i = 0; i < this.vehicleList.length; i++) {
+			var v = this.vehicleList[i];
+			v.behaviors();
+			v.update();
+			v.show();
+		}
+	}
+}
+
 

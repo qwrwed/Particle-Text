@@ -5,13 +5,13 @@
 	<title>Particle Text Demonstration</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
 	<script src="Vehicle.js"></script>
-	<script src="particle-clock.js"></script>
+	<!--<script src="particle-clock.js"></script>-->
 	<script src="particle-text.js"></script>
 </head>
 
 <body>
 	<script type="application/javascript">
-	/*
+	
 	let bounds = [1000, 500];
 	let font;
 	
@@ -21,41 +21,53 @@
 		
 	var ps;
 
-	*/
 	var count = 0;
-	var alphaString = String.fromCharCode(97 + count);
+	var alphaString = String.fromCharCode(65 + count);
 	var startTime, currTime;
+	let texts = [];
 	function setup() {
-		clockSetup();
-		//createCanvas(bounds[0], bounds[1]);
-		//background(51);
-		ps = new ParticleString("Hello, world!", font, width*0.1, height*0.9);
+		//clockSetup();
+		createCanvas(bounds[0], bounds[1]);
+		background(51);
+		ps = new ParticleString("Particle Text", font, {fontSize : 30, x : width*0.4, y : height*0.1});
 		startTime = new Date();
-		ps2 = new ParticleString("Hello, world!", font, width*0.2, height*0.8);
-		a = new ParticleString(alphaString, font, 100, 100);
+		ps2 = new ParticleString("Hello, world!", font, {x : width*0.2, y : height*0.8});
+		a = new ParticleString(alphaString, font, {x : 700, y : 100});
+		clock = new ParticleClock(font, {fontSize:192});
 		
+		
+		
+		for (var i = 1; i < 10 ; i += 3) {
+			texts.push(new ParticleString("test", font, {x : 50*i, y : 100, fontSize : i*10}));
+		}
 	}
 		
 	function draw() {
-		console.log(alphaString)
+		//console.log(alphaString)
 		//console.log(countString)
 		currTime = new Date();
 		timeDiff = (currTime - startTime)/1000;
 		
+		
 		if (timeDiff > 1){
 			startTime = new Date();
 			count = (count + 1) % 26;
-			alphaString = String.fromCharCode(97 + count);
+			alphaString = String.fromCharCode(65 + count);
 			a.updateText(alphaString);
 			
 		}
 		
 		
-		clockDraw();
-		//background(51);
+		//clockDraw();
+		background(51);//, 100);
+		clock.draw();
 		ps.draw();
 		a.draw();
 		ps2.draw();
+		
+		for (var i = 0; i < texts.length ; i++) {
+			texts[i].draw();
+		}
 	}
 
 	/*
