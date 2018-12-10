@@ -3,14 +3,19 @@ class ParticleString {
 
     //constructor(string, font, x, y){
     constructor(string, font, args) {
+        let sampleScale = 13;
         this.textString = string || "No string set";
-        //this.font = loadFont('AvenirNextLTPro-Demi.otf');
         this.font = font;
         this.vehicleList = [];
         this.fontSize = args.fontSize || 40;
+		this.color = args.color || 255;
+        this.particleSize = args.particleSize || 0.03 * this.fontSize;
+        this.sampleFactor = args.sampleFactor || sampleScale / this.fontSize;
+        //resolution; density using distances between particles.
+        //static limiter for particles?
+        //precalculate positions?
+        console.log(this.sampleFactor);
 
-        this.particleSize = 0.03 * this.fontSize;
-        this.sampleFactor = 20 / this.fontSize;
 
         const bounds = this.font.textBounds(this.textString, 0, 0, this.fontSize);
 
@@ -18,7 +23,7 @@ class ParticleString {
         this.x = (args.x || width / 2);
         this.y = (args.y || height / 2);
 
-        //actual location to draw at, adjusted from input:
+        //actual location to start drawing at (corner), adjusted from input:
         this.posX = this.x - bounds.w / 2;
         this.posY = this.y + bounds.h / 2;
 
@@ -28,7 +33,7 @@ class ParticleString {
 
         for (let i = 0; i < points.length; i++) {
             const point = points[i];
-            const newVehicle = new Vehicle(point.x, point.y, this.particleSize);
+            const newVehicle = new Vehicle(point.x, point.y, this.particleSize, this.color);
             this.vehicleList.push(newVehicle);
         }
     }
@@ -78,7 +83,7 @@ class ParticleString {
         for (let i = 0; i < points.length; i++) {
             this.vehicleList[i].target.x = points[i].x;
             this.vehicleList[i].target.y = points[i].y;
-            let force = p5.Vector.random2D();
+            const force = p5.Vector.random2D();
             force.mult(random(maxChangeForce));
             this.vehicleList[i].applyForce(force);
         }
