@@ -18,14 +18,8 @@ Vehicle.prototype.behaviors = function () {
     const arrive = this.arrive(this.target);
     const mouse = createVector(mouseX, mouseY);
     const flee = this.flee(mouse);
-	if (mouseIsPressed) {
-		flee.mult(-3);
-	} else{
-		flee.mult(5);
-	}
-    
-	arrive.mult(1);
-	
+	if (mouseIsPressed) { flee.mult(-1); } else{ flee.mult(5); }
+	//arrive.mult(1);
     this.applyForce(arrive);
     this.applyForce(flee);
 };
@@ -34,7 +28,7 @@ Vehicle.prototype.applyForce = function (f) {
     this.acc.add(f);
 };
 
-Vehicle.prototype.update = function () {
+Vehicle.prototype.updateKinematics = function () {
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.mult(0);
@@ -46,14 +40,27 @@ Vehicle.prototype.show = function () {
     point(this.pos.x, this.pos.y);
 };
 
+Vehicle.prototype.updateParams = function (parent) {
+    this.color = parent.color;
+    this.r = parent.particleSize;
+};
+
 
 Vehicle.prototype.arrive = function (target) {
+    // target: where the particle should be (2-element vector)
+    // this.pos: where the particle is (2-element vector)
     const desired = p5.Vector.sub(target, this.pos);
+    //desired: position vector between current position and target position
     const d = desired.mag();
+    //d: distance between current position and target position
+    //desired.setMag(-Math.exp(-((d / 30)**2)));
+    //return desired;
     let speed = this.maxspeed;
+    //speed initially set to maximum speed, only change if d > 100
     if (d < 100) {
         speed = map(d, 0, 100, 0, this.maxspeed);
     }
+    // if d < 100, speed is proportional to d
     desired.setMag(speed);
     const steer = p5.Vector.sub(desired, this.vel);
     steer.limit(this.maxforce);
@@ -65,10 +72,10 @@ Vehicle.prototype.flee = function (target) {
     // this.pos: where the particle is (2-element vector)
     const desired = p5.Vector.sub(target, this.pos);
     // desired
-    const d = desired.mag();
+    const d = desired.mag();// * 2/ this.r;
 
-    //desired.setMag(-Math.exp(-((d / 30)**2)));
-    //return desired;
+    desired.setMag(-Math.exp(-((d / 30)**2)));
+    return desired;
     if (d < 50) {
 
         desired.setMag(this.maxspeed);
@@ -80,6 +87,74 @@ Vehicle.prototype.flee = function (target) {
         return createVector(0, 0);
     }
 };
+
+/*
+Vehicle.prototype.arrive = function (target) {
+    // target: where the particle should be (2-element vector)
+    // this.pos: where the particle is (2-element vector)
+    const desired = p5.Vector.sub(target, this.pos);
+    //desired: position vector between current position and target position
+    const d = desired.mag();
+    //d: distance between current position and target position
+    //console.log(d);
+    let mag = (d/30)**2;
+    desired.setMag(mag);
+    const steer = p5.Vector.sub(desired, this.vel);
+    //steer.limit(this.maxforce);
+    return steer;
+};
+Vehicle.prototype.arrive = function (target) {
+    // target: where the particle should be (2-element vector)
+    // this.pos: where the particle is (2-element vector)
+    const desired = p5.Vector.sub(target, this.pos);
+    //desired: position vector between current position and target position
+    const d = desired.mag();
+    //d: distance between current position and target position
+    //desired.setMag(-Math.exp(-((d / 30)**2)));
+    //return desired;
+    let speed = this.maxspeed;
+    if (d < 100) {
+        speed = map(d, 0, 100, 0, this.maxspeed);
+    }
+    desired.setMag(speed);
+    const steer = p5.Vector.sub(desired, this.vel);
+    steer.limit(this.maxforce);
+    return steer;
+};
+
+Vehicle.prototype.flee = function (target) {
+    const desired = p5.Vector.sub(target, this.pos);
+    const d = desired.mag();
+    //desired.setMag(-Math.exp(-((d / 30) ** 2)));
+    desired.setMag(-Math.exp(-((d/10)**2)));
+    //desired.setMag(20/d);
+    //desired.mult(-1);
+    //const steer = p5.Vector.sub(desired, this.vel);
+    //steer.limit(this.maxforce);
+    //return steer;
+    return desired;
+};
+
+Vehicle.prototype.flee = function (target) {
+    // target: where the particle should be (2-element vector)
+    // this.pos: where the particle is (2-element vector)
+    const desired = p5.Vector.sub(target, this.pos);
+    // desired
+    const d = desired.mag();
+
+    desired.setMag(-Math.exp(-((d / 30)**2)));
+    return desired;
+    if (d < 50) {
+
+        desired.setMag(this.maxspeed);
+        desired.mult(-1);
+        const steer = p5.Vector.sub(desired, this.vel);
+        steer.limit(this.maxforce);
+        return steer;
+    } else {
+        return createVector(0, 0);
+    }
+};*/
 
 Vehicle.prototype.clone = function () {
     const v = new Vehicle(this.pos.x, this.pos.y, this.r);

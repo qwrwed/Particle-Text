@@ -6,85 +6,42 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
 	<script src="Vehicle.js"></script>
 	<script src="particle-text.js"></script>
+	<script src="index.js"></script>
+    <!--
+    //index.js contains minimal default setup and draw functions
+    //optional p5.Renderer as parameter: p5.Renderer objects are returned by createCanvas and createGraphics
+    // can be used e.g. as texture for another object
+    // optional parameter in draw()
+    // can have constructor optionally create and return canvas
+    // ESLint: Node.js
+    -->
 </head>
 
 <body>
-	<script type="application/javascript">
-	//begin required setup variables:
-	let bounds = [1000, 500];
-	let bgColor = 51;
-	let blur_percent = 0;
-	let font;
-	function preload(){
-		font = loadFont('AvenirNextLTPro-Demi.otf');
-	}
-	//end required setup variables
-
-	//begin non-required setup variables for example
-	let count = 0;
-	let alphaString = String.fromCharCode(65 + count);
-	let prevSec, currSec;
-	let texts = [];
-	const cols = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
-    //end non-required setup variables for example
-
-	function setup() {
-		//begin required
-	    createCanvas(bounds[0], bounds[1]);
-		background(bgColor);
-		//end required
-
-		//begin non-required for example
-        prevSec = second();
-		//end non-required for example
-
-		//add particle strings/clocks below:
-        clockTitlePS = new ParticleString("Particle Text", font, {y : height/6});
-        clock = new ParticleClock(font, {color : '#FF00FF'});
-        ltr = new ParticleString(alphaString, font, {x : 700, y : 100});
-        //test2 = new ParticleString("test2", font, {x : 500, y : 200, fontSize : 100});
-
-		//uses empty texts array above to create ParticleStrings in loop
-		let textsBounds = [1,6]; //min 1, max 6
-		for (let i = textsBounds[0]; i <= textsBounds[1] ; i++) {
-			texts.push(new ParticleString("loop"+(i), font, {x : 20*i**2, y : 400, fontSize : i*10, color : cols[i-1]}));
-		}
-	}
-		
-	function draw() {
-	    //begin required
-	    background(bgColor, 255 *(1 - blur_percent/100));
-		//end required
-		
-		//begin non-required for example
-        currSec = second();
-	    if (prevSec !== currSec){
-	        prevSec = currSec;
-            count = (count + 1) % 26;
-            alphaString = String.fromCharCode(65 + count);
-            ltr.updateText(alphaString);
-        }
-		//end non-required for example
-
-	    //add draw functions for created particle strings/clocks below:
-        clockTitlePS.draw();
-		clock.draw();
-        ltr.draw();
-        //test2.draw();
-
-		//draw from texts array in loop
-		for (let i = 0; i < texts.length ; i++) {
-			texts[i].draw();
-		}
-	}
-
-	/*
-	function windowResized() {
-		resizeCanvas(bounds[0], bounds[1]);
-	}
-	*/
-	
-	</script>
+	<form id = "params_form">
+		<table>
+			<tr>
+				<td align="right">Element:</td>
+				<td align="left">
+					<select id = "element">
+						<option value = -1>[All Elements]</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Colour:</td>
+				<td align="left"><input id = "colour"></td>
+			</tr>
+			<tr>
+				<td align="right">Particle Size:</td>
+				<td align="left"><input type = "number" id = "radius"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td align="center"><button type="submit" id = "confirm">Confirm</button></td>
+			</tr>
+		</table>
+	</form>
 </body>
 
 </html>

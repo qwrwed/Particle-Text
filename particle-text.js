@@ -1,9 +1,11 @@
-
+allInstances = [];
 class ParticleString {
 
     //constructor(string, font, x, y){
     constructor(string, font, args) {
         let sampleScale = 13;
+        this.textString = string || "No string set";
+        this.id = this.textString;
         this.textString = string || "No string set";
         this.font = font;
         this.vehicleList = [];
@@ -14,8 +16,7 @@ class ParticleString {
         //resolution; density using distances between particles.
         //static limiter for particles?
         //precalculate positions?
-        console.log(this.sampleFactor);
-
+        //console.log(this.sampleFactor);
 
         const bounds = this.font.textBounds(this.textString, 0, 0, this.fontSize);
 
@@ -32,21 +33,38 @@ class ParticleString {
         });
 
         for (let i = 0; i < points.length; i++) {
+        //for (let i = 0; i <=1; i++) {
             const point = points[i];
             const newVehicle = new Vehicle(point.x, point.y, this.particleSize, this.color);
             this.vehicleList.push(newVehicle);
         }
+        allInstances.push(this)
     }
 
+    setColour(color){
+        this.color = color;
+    }
 
-    draw() {
+    setParticleSize(particleSize){
+        this.particleSize = particleSize;
+        console.log("changing size")
+    }
+
+    draw(){
+        this.apply()
+    }
+
+    apply() {
         for (let i = 0; i < this.vehicleList.length; i++) {
             const v = this.vehicleList[i];
+            v.updateParams(this);
             v.behaviors();
-            v.update();
+            v.updateKinematics();
             v.show();
         }
     }
+
+
 
     updateText(string) {
         const maxChangeForce = 0;
@@ -95,6 +113,7 @@ class ParticleClock extends ParticleString {
     constructor(font, args) {
         args.fontSize = args.fontSize || 192;
         super(hour() + ":" + minute() + ":" + second(), font, args);
+        this.id = "[Clock]"
         this.prevSec = -1;
     }
 
@@ -112,12 +131,7 @@ class ParticleClock extends ParticleString {
             this.updateText(hours + ":" + minutes + ":" + seconds);
         }
 
-        for (let i = 0; i < this.vehicleList.length; i++) {
-            const v = this.vehicleList[i];
-            v.behaviors();
-            v.update();
-            v.show();
-        }
+        this.apply()
     }
 }
 
