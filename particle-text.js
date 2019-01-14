@@ -1,28 +1,31 @@
-allInstances = [];
+let allInstances = [];
 class ParticleString {
 
-    //constructor(string, font, x, y){
     constructor(string, font, args) {
+
+        let default_args = {
+            colour : 255,
+            fontSize : 40,
+            font : font,
+            id: string,
+            //location of centre, as input:
+            x : width/2,
+            y : height/2
+        };
+        for (let k in default_args){
+            this[k] = k in args ? args[k] : default_args[k];
+        }
+
+        this.textString  = string;
+
         let sampleScale = 13;
-        this.textString = string || "No string set";
-        this.id = this.textString;
-        this.textString = string || "No string set";
-        this.font = font;
+        this.sampleFactor = sampleScale in args? args.sampleFactor : sampleScale / this.fontSize;
+        this.particleSize = 0.03 * this.fontSize;
+        this.particleSize = Math.round(this.particleSize*10)/10;
+
         this.vehicleList = [];
-        this.fontSize = args.fontSize || 40;
-		this.color = args.color || 255;
-        this.particleSize = args.particleSize || 0.03 * this.fontSize;
-        this.sampleFactor = args.sampleFactor || sampleScale / this.fontSize;
-        //resolution; density using distances between particles.
-        //static limiter for particles?
-        //precalculate positions?
-        //console.log(this.sampleFactor);
 
         const bounds = this.font.textBounds(this.textString, 0, 0, this.fontSize);
-
-        //location of centre, as input:
-        this.x = (args.x || width / 2);
-        this.y = (args.y || height / 2);
 
         //actual location to start drawing at (corner), adjusted from input:
         this.posX = this.x - bounds.w / 2;
@@ -33,31 +36,23 @@ class ParticleString {
         });
 
         for (let i = 0; i < points.length; i++) {
-        //for (let i = 0; i <=1; i++) {
+            //for (let i = 0; i <=1; i++) {
             const point = points[i];
-            const newVehicle = new Vehicle(point.x, point.y, this.particleSize, this.color);
+            const newVehicle = new Vehicle(point.x, point.y, this.particleSize, this.colour);
             this.vehicleList.push(newVehicle);
         }
-        allInstances.push(this)
+        allInstances.push(this);
     }
 
-    setColour(color){
-        this.color = color;
-    }
-
-    setParticleSize(particleSize){
-        this.particleSize = particleSize;
-        console.log("changing size")
-    }
 
     draw(){
-        this.apply()
+        this.apply();
     }
 
     apply() {
         for (let i = 0; i < this.vehicleList.length; i++) {
             const v = this.vehicleList[i];
-            v.updateParams(this);
+            v.updateVehicleParams(this);
             v.behaviors();
             v.updateKinematics();
             v.show();
@@ -65,8 +60,7 @@ class ParticleString {
     }
 
 
-
-    updateText(string) {
+    updateText(string = this.textString) {
         const maxChangeForce = 0;
         //update the text string:
         this.textString = string;
@@ -106,15 +100,14 @@ class ParticleString {
             this.vehicleList[i].applyForce(force);
         }
     }
-
 }
 
 class ParticleClock extends ParticleString {
     constructor(font, args) {
         args.fontSize = args.fontSize || 192;
-        super(hour() + ":" + minute() + ":" + second(), font, args);
-        this.id = "[Clock]"
+        super(hour() + ':' + minute() + ':' + second(), font, args);
         this.prevSec = -1;
+        this.id = '[Clock]';
     }
 
     draw() {
@@ -128,10 +121,10 @@ class ParticleClock extends ParticleString {
             hours = nf(hours, 2, 0);
             minutes = nf(minutes, 2, 0);
             seconds = nf(seconds, 2, 0);
-            this.updateText(hours + ":" + minutes + ":" + seconds);
+            this.updateText(hours + ':' + minutes + ':' + seconds);
         }
 
-        this.apply()
+        this.apply();
     }
 }
 

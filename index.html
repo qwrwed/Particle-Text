@@ -1,45 +1,59 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang=''>
 <head>
-	<meta charset="UTF-8">
+	<meta charset='UTF-8'>
 	<title>Particle Text Demonstration</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
-	<script src="Vehicle.js"></script>
-	<script src="particle-text.js"></script>
-	<script src="index.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="indexstyle.css">
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.js"></script>
+	<script src='Vehicle.js'></script>
+	<script src='particle-text.js'></script>
+	<script src='example.js'></script>
+	<style>
+		body {
+			background-color: #BBB
+		}
+	</style>
     <!--
-    //index.js contains minimal default setup and draw functions
     //optional p5.Renderer as parameter: p5.Renderer objects are returned by createCanvas and createGraphics
     // can be used e.g. as texture for another object
     // optional parameter in draw()
     // can have constructor optionally create and return canvas
-    // ESLint: Node.js
     -->
 </head>
 
 <body>
-	<form id = "params_form">
+	<div id="canvas_div" style="width: 100%;"></div>
+	<form id = 'params_form' class = 'formTable' autocomplete='off'>
 		<table>
 			<tr>
-				<td align="right">Element:</td>
-				<td align="left">
-					<select id = "element">
-						<option value = -1>[All Elements]</option>
-					</select>
-				</td>
+				<td><label for='element'>Element:</label></td>
+				<td><select id = 'element'>
+					<option value = -1>[All Elements]</option>
+				</select></td>
 			</tr>
 			<tr>
-				<td align="right">Colour:</td>
-				<td align="left"><input id = "colour"></td>
+				<td><label for='colour'>Colour:</label></td>
+				<td><input id = 'colour'></td>
+				<td><button type='button' id = 'setColour'>Set Colour</button></td>
 			</tr>
 			<tr>
-				<td align="right">Particle Size:</td>
-				<td align="left"><input type = "number" id = "radius"/></td>
+				<td><label for='fontSize'>Font Size:</label></td>
+				<td><input type = 'number' id = 'fontSize' disabled = true value = '(Must be changed individually)'></td>
+				<td><button type='button' id = 'setFontSize' disabled = true>Set Font Size</button></td>
 			</tr>
+			<tr>
+				<td><label for='particleSize'>Particle Size:</label></td>
+				<td><input type = 'number' id = 'particleSize' min='0.1' step='0.1'/></td>
+				<td><button type='button' id = 'setParticleSize'>Set Particle Size</button></td>
+			</tr>
+			<!--
 			<tr>
 				<td></td>
-				<td align="center"><button type="submit" id = "confirm">Confirm</button></td>
+				<td><button type='button' id = 'setAll'>Set All</button></td>
 			</tr>
+			-->
 		</table>
 	</form>
 </body>

@@ -9,7 +9,7 @@ function Vehicle(x, y, size, color) {
     this.vel = p5.Vector.random2D();
     this.acc = createVector();
     this.r = size || 8;
-	this.color = color;
+    this.colour = color;
     this.maxspeed = 20;
     this.maxforce = 2;
 }
@@ -18,8 +18,8 @@ Vehicle.prototype.behaviors = function () {
     const arrive = this.arrive(this.target);
     const mouse = createVector(mouseX, mouseY);
     const flee = this.flee(mouse);
-	if (mouseIsPressed) { flee.mult(-1); } else{ flee.mult(5); }
-	//arrive.mult(1);
+    if (mouseIsPressed) { flee.mult(-1); } else{ flee.mult(5); }
+    //arrive.mult(1);
     this.applyForce(arrive);
     this.applyForce(flee);
 };
@@ -35,13 +35,13 @@ Vehicle.prototype.updateKinematics = function () {
 };
 
 Vehicle.prototype.show = function () {
-    stroke(this.color);
+    stroke(this.colour);
     strokeWeight(this.r);
     point(this.pos.x, this.pos.y);
 };
 
-Vehicle.prototype.updateParams = function (parent) {
-    this.color = parent.color;
+Vehicle.prototype.updateVehicleParams = function (parent) {
+    this.colour = parent.colour;
     this.r = parent.particleSize;
 };
 
@@ -74,8 +74,9 @@ Vehicle.prototype.flee = function (target) {
     // desired
     const d = desired.mag();// * 2/ this.r;
 
-    desired.setMag(-Math.exp(-((d / 30)**2)));
+    desired.setMag(-Math.exp(-(Math.pow((d / 30),2))));
     return desired;
+    /*
     if (d < 50) {
 
         desired.setMag(this.maxspeed);
@@ -85,7 +86,7 @@ Vehicle.prototype.flee = function (target) {
         return steer;
     } else {
         return createVector(0, 0);
-    }
+    }*/
 };
 
 /*
@@ -168,9 +169,9 @@ Vehicle.prototype.clone = function () {
     v.acc.x = this.acc.x;
     v.acc.y = this.acc.y;
 
-	v.r = this.r;
-	v.color = this.color;
-	//make sure clone inherits radius and colour too
+    v.r = this.r;
+    v.colour = this.colour;
+    //make sure clone inherits radius and colour too
 	
     return v;
 };
