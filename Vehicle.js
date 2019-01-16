@@ -14,9 +14,10 @@ function Vehicle(x, y, size, color) {
     this.maxforce = 2;
 }
 
-Vehicle.prototype.behaviors = function () {
+Vehicle.prototype.behaviors = function (renderer) {
     const arrive = this.arrive(this.target);
-    const mouse = createVector(mouseX, mouseY);
+    const mouse = typeof(renderer)==='undefined' ? createVector(mouseX, mouseY) : createVector(renderer.mouseX, renderer.mouseY);
+    //note: renderers do not appear to work with mouseX and mouseY functions, or have a usable equivalent
     const flee = this.flee(mouse);
     if (mouseIsPressed) { flee.mult(-1); } else{ flee.mult(5); }
     //arrive.mult(1);
@@ -34,10 +35,20 @@ Vehicle.prototype.updateKinematics = function () {
     this.acc.mult(0);
 };
 
-Vehicle.prototype.show = function () {
-    stroke(this.colour);
-    strokeWeight(this.r);
-    point(this.pos.x, this.pos.y);
+Vehicle.prototype.show = function (renderer) {
+
+
+    if (typeof(renderer)==='undefined'){
+        strokeWeight(this.r);
+        stroke(this.colour);
+        point(this.pos.x, this.pos.y);
+
+    } else{
+        renderer.strokeWeight(this.r);
+        renderer.stroke(this.colour);
+        renderer.point(this.pos.x, this.pos.y);
+    }
+
 };
 
 Vehicle.prototype.updateVehicleParams = function (parent) {

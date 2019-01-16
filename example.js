@@ -32,12 +32,14 @@ let texts = [];
 //end example
 
 function setup() {
+
     //begin required
     const canvas_div = select('#canvas_div');
     canvas = createCanvas(max(canvas_div.width, canvas_width_min), canvas_height);
     canvas.parent('canvas_div');
-    background(bgcolour);
+    background(bgcolour, 255 *(1 - blur_percent/100));
     //end required
+
 
     //begin example
     //Example 1: Title
@@ -60,9 +62,8 @@ function setup() {
     for (let i = 0; i < allInstances.length; i++){
         dropdown.options[dropdown.options.length] = new Option(allInstances[i].id, i.toString());
     }
-    //dropdown.value = 0; //set to first element instead of starting with all elements selected
+
     windowResized(); //initial sizing happens too early to account for vertical scrollbars taking up width, so resize now
-    //instance = allInstances[chosenElement];
 }
 
 function draw() {
@@ -89,6 +90,7 @@ function draw() {
         texts[i].draw();
     }
     //end example
+
 }
 
 function windowResized() {
@@ -112,57 +114,48 @@ document.addEventListener('DOMContentLoaded', function() {
         if (chosenElement ==='-1') {
             allChosen = true;
             colourField.value = null;
-            fontSizeField.value = '(Must be changed individually)';
+            fontSizeField.value = null;
             particleSizeField.value = null;
-            document.getElementById('setFontSize').disabled = true;
-            fontSizeField.disabled = true;
         } else {
             instance = allInstances[chosenElement];
             allChosen = false;
             colourField.value = instance.colour;
             fontSizeField.value = instance.fontSize;
             particleSizeField.value = instance.particleSize;
-            document.getElementById('setFontSize').disabled = false;
-            fontSizeField.disabled = false;
         }
     }
 
-    document.getElementById('setParticleSize').addEventListener('click', changeParticleSize);
-    particleSizeField.addEventListener('change', changeParticleSize);
-    function changeParticleSize(){
-        if (particleSizeField.value !== '') {
+    const fields = {
+        particleSize : particleSizeField,
+        fontSize : fontSizeField,
+        colour : colourField
+    };
+
+    const particleSizeButton = document.getElementById('setParticleSize');
+    const fontSizeButton = document.getElementById('setFontSize');
+    const colourButton = document.getElementById('setColour');
+    particleSizeButton.addEventListener('click', function(){changeParam('particleSize')});
+    fontSizeButton.addEventListener('click', function(){changeParam('fontSize')});
+    colourButton.addEventListener('click', function(){changeParam('colour')});
+
+    function changeParam(paramName){
+        if (fields[paramName].value !== '') {
             if (allChosen) {
                 for (let i = 0; i < allInstances.length; i++) {
-                    allInstances[i].particleSize = particleSizeField.value;
+                    allInstances[i][paramName] = fields[paramName].value;
+                    if (paramName === 'fontSize'){
+                        allInstances[i].updateText(); //inexplicably breaks when called from setter function
+                    }
                 }
             } else {
-                instance.particleSize = particleSizeField.value;
+                instance[paramName] = fields[paramName].value;
+                if (paramName === 'fontSize'){
+                    instance.updateText(); //inexplicably breaks when called from setter function
+                }
             }
         }
     }
-
-    document.getElementById('setFontSize').addEventListener('click', changeFontSize);
-    fontSizeField.addEventListener('change', changeFontSize);
-    function changeFontSize(){
-        if (fontSizeField.value !== '') {
-            instance.fontSize = fontSizeField.value;
-            instance.updateText();
-        }
-    }
-    document.getElementById('setColour').addEventListener('click', changeColour);
-    colourField.addEventListener('change', changeColour)
-    function changeColour(){
-        if (colourField.value !== '') {
-            if (allChosen) {
-                for (let i = 0; i < allInstances.length; i++) {
-                    allInstances[i].colour = colourField.value;
-                }
-            } else {
-                instance.colour = colourField.value;
-            }
-        }
-    }
-
+    //TODO: samplerate
     document.getElementById('params_form').addEventListener('submit', function (event){
         event.preventDefault();
     });
