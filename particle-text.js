@@ -84,7 +84,7 @@ class ParticleString {
     }
 
     draw(renderer){
-        this.drawCommon(renderer)
+        this.drawCommon(renderer);
     }
 
     drawCommon(renderer) {

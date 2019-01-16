@@ -9,12 +9,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.js"></script>
 	<script src='Vehicle.js'></script>
 	<script src='particle-text.js'></script>
-	<script src='example.js'></script>
+	<script src='index.js'></script>
 </head>
 
 <body>
 	<div id="canvas_div" style="width: 100%;"></div>
-	<div align="center">Mouseover to apply force to particles (repulsive by default; click to attract).  Note: High particle density may cause slowdowns for large font sizes.</div>
+	<div>Mouseover to apply force to particles (repulsive by default; click to attract).  Note: High particle density may cause slowdowns for large font sizes.</div>
 	<form id = 'params_form' class = 'formTable' autocomplete='off'>
 		<table>
 			<tr>
@@ -22,6 +22,7 @@
 				<td><select id = 'element'>
 					<option value = -1>[All Elements]</option>
 				</select></td>
+				<td></td>
 			</tr>
 			<tr>
 				<td><label for='colour'>Colour (any format):</label></td>
@@ -40,7 +41,7 @@
 			</tr>
 			<tr>
 				<td><label for='sampleFactor'>Particle Density:</label></td>
-				<td><input id = 'sampleFactor' type='range' min = '0.01' max = '1' step = '0.01' value='0'</td>
+				<td><input id = 'sampleFactor' type='range' min = '0.01' max = '1' step = '0.01' value='0'></td>
 				<td><div id = 'sampleFactorDisplay' style = 'text-align:left'> - </div></td>
 			</tr>
 		</table>

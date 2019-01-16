@@ -8,6 +8,10 @@ td {
     text-align: right;
 }
 
+div{
+    text-align: center;
+}
+
 form {
     margin-left : 35%;
 }

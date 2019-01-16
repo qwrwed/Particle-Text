@@ -25,17 +25,17 @@ class Vehicle {
         }
         this.applyForce(arrive);
         this.applyForce(mouseForce);
-    };
+    }
 
     applyForce(f) {
         this.acc.add(f);
-    };
+    }
 
     updateKinematics() {
         this.pos.add(this.vel);
         this.vel.add(this.acc);
         this.acc.mult(0);
-    };
+    }
 
     show(renderer) {
         if (typeof (renderer) === 'undefined') {
@@ -47,12 +47,12 @@ class Vehicle {
             renderer.stroke(this.colour);
             renderer.point(this.pos.x, this.pos.y);
         }
-    };
+    }
 
     updateVehicleParams(parent) {
         this.colour = parent.colour;
         this.particleSize = parent.particleSize;
-    };
+    }
 
     arrive(target){
         //target: where the particle should be
@@ -61,31 +61,31 @@ class Vehicle {
         const d = desired.mag();
         //d: distance between current position and target position
         let speed = this.maxspeed;
-        const r = 100
+        const r = 100;
         if (d < r) {
             speed = map(d, 0, r, 0, this.maxspeed);
         }
         desired.setMag(speed); //velocity vector; magnitude is speed and direction is towards target
         let steer = p5.Vector.sub(desired, this.vel); // steering force = desired - velocity
-        steer.limit(this.maxforce)
+        steer.limit(this.maxforce);
         return(steer);
-    };
+    }
 
     flee(target){
         let desired = p5.Vector.sub(target, this.pos);
         const d = desired.mag();
-        let r = 50
+        let r = 50;
         let speed;
         if (d < r) {
             speed = map(d, 0, r, this.maxspeed, 0);
         } else {
-            speed = 0
+            speed = 0;
         }
         desired.setMag(speed); //velocity vector; magnitude is speed and direction is towards target
         desired.mult(-1);
-        desired.limit(this.maxforce)
+        desired.limit(this.maxforce);
         return(desired);
-    };
+    }
 
 
     /*
@@ -225,5 +225,5 @@ class Vehicle {
         //make sure clone inherits radius and colour too
 
         return v;
-    };
+    }
 }
