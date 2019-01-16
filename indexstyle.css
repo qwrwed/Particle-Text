@@ -7,3 +7,12 @@ input, select, button {
 td {
     text-align: right;
 }
+
+form {
+    margin-left : 35%;
+}
+
+body {
+    background-color: #BBB;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}

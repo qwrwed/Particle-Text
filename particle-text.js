@@ -1,10 +1,22 @@
 let allInstances = [];
 class ParticleString {
+    get sampleFactor() {
+        return this._sampleFactor;
+    }
+
+    set sampleFactor(value) {
+        value = +(+value).toFixed(2);
+        this._sampleFactor = value;
+        if (typeof(this.vehicleList)!== 'undefined') {
+            this.updateText();
+        }
+    }
     get particleSize() {
         return this._particleSize;
     }
 
     set particleSize(value) {
+        value = +(+value).toFixed(1);
         this._particleSize = value;
     }
 
@@ -14,16 +26,18 @@ class ParticleString {
 
     set fontSize(value) {
         this._fontSize = value;
-        //this.updateText();
+        if (typeof(this.vehicleList)!== 'undefined') {
+            this.updateText();
+        }
     }
 
     get colour() {
-        return this._colour;
+        const col = this._colour;
+        return color(col).toString();
     }
 
     set colour(value) {
         this._colour = value;
-        //this.updateText(); // gives error when called here
     }
 
     constructor(string, font, args={}, renderer) {
@@ -33,10 +47,10 @@ class ParticleString {
             fontSize: 40,
             font: font,
             id: string,
-            //location of centre, as input:
             x: typeof(renderer)==='undefined'? width / 2 : renderer.width/2,
             y: typeof(renderer)==='undefined'? height / 2 : renderer.height/2,
         };
+
         for (let k in default_args) {
             this[k] = k in args ? args[k] : default_args[k];
         }
@@ -45,8 +59,8 @@ class ParticleString {
 
         let sampleScale = 13;
         this.sampleFactor = sampleScale in args ? args.sampleFactor : sampleScale / this._fontSize;
-        this._particleSize = 0.03 * this._fontSize;
-        this._particleSize = Math.round(this._particleSize * 10) / 10;
+        this.particleSize = typeof(args.particleSize)==='undefined'? 0.03 * +this._fontSize : +args.particleSize;
+        //use setters here to process value
 
         this.vehicleList = [];
 
@@ -57,7 +71,7 @@ class ParticleString {
         this.posY = this.y + bounds.h / 2;
 
         const points = font.textToPoints(this.textString, this.posX, this.posY, this._fontSize, {
-            sampleFactor: this.sampleFactor
+            sampleFactor: this._sampleFactor
         });
 
         for (let i = 0; i < points.length; i++) {
@@ -69,23 +83,15 @@ class ParticleString {
         allInstances.push(this);
     }
 
-    //draw(g)
-    // if g exists (g is renderer), draw to this renderer
-    // g.doStuff()
-    // OR just redefine function once
-    // if no g, draw to canvas
-    // doStuff
-    // OR just redefine function once
-
     draw(renderer){
-        this.apply(renderer)
+        this.drawCommon(renderer)
     }
 
-    apply(renderer) {
+    drawCommon(renderer) {
         for (let i = 0; i < this.vehicleList.length; i++) {
             const v = this.vehicleList[i];
             v.updateVehicleParams(this);
-            v.behaviors(renderer);
+            v.behaviours(renderer);
             v.updateKinematics();
             v.show(renderer);
         }
@@ -103,7 +109,7 @@ class ParticleString {
         this.posY = this.y + bounds.h / 2;
 
         const points = font.textToPoints(this.textString, this.posX, this.posY, this._fontSize, {
-            sampleFactor: this.sampleFactor
+            sampleFactor: this._sampleFactor
         });
 
         if (points.length < this.vehicleList.length) {
@@ -135,14 +141,14 @@ class ParticleString {
 }
 
 class ParticleClock extends ParticleString {
-    constructor(font, args) {
+    constructor(font, args={}, renderer) {
         args.fontSize = args.fontSize || 192;
-        super(hour() + ':' + minute() + ':' + second(), font, args);
+        super(hour() + ':' + minute() + ':' + second(), font, args, renderer);
         this.prevSec = -1;
         this.id = '[Clock]';
     }
 
-    draw() {
+    draw(renderer) {
 
         let hours = hour();
         let minutes = minute();
@@ -156,8 +162,6 @@ class ParticleClock extends ParticleString {
             this.updateText(hours + ':' + minutes + ':' + seconds);
         }
 
-        this.apply();
+        this.drawCommon(renderer);
     }
 }
-
-

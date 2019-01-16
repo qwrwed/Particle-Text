@@ -1,6 +1,5 @@
 //The code for the examples can be removed/added, but the general code is required for all.
 
-
 //begin general (required) setup code:
 let bgcolour = 51;
 let blur_percent = 0;
@@ -10,7 +9,7 @@ const canvas_height = 500;
 const canvas_width_min = 1000;
 
 let chosenElement = '-1';
-let instance;
+let instance = allInstances;
 
 function preload(){
     font = loadFont('AvenirNextLTPro-Demi.otf');
@@ -33,13 +32,13 @@ let texts = [];
 
 function setup() {
 
+
     //begin required
     const canvas_div = select('#canvas_div');
     canvas = createCanvas(max(canvas_div.width, canvas_width_min), canvas_height);
     canvas.parent('canvas_div');
     background(bgcolour, 255 *(1 - blur_percent/100));
     //end required
-
 
     //begin example
     //Example 1: Title
@@ -97,65 +96,81 @@ function windowResized() {
     resizeCanvas(max(select('#canvas_div').width, canvas_width_min), canvas_height);
 }
 
-
-
 document.addEventListener('DOMContentLoaded', function() {
     let allChosen = true;
 
     const dropdown = document.getElementById('element');
+
     const colourField = document.getElementById('colour');
     const fontSizeField = document.getElementById('fontSize');
     const particleSizeField = document.getElementById('particleSize');
+    const sampleFactorField = document.getElementById('sampleFactor');
 
+    const fields = {
+        colour : colourField,
+        fontSize : fontSizeField,
+        particleSize : particleSizeField,
+        sampleFactor : sampleFactorField
+    };
+
+    const colourDisplay = document.getElementById('colourDisplay');
+    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+    const particleSizeDisplay = document.getElementById('particleSizeDisplay');
+    const sampleFactorDisplay = document.getElementById('sampleFactorDisplay');
+
+    const displays = {
+        colour : colourDisplay,
+        fontSize : fontSizeDisplay,
+        particleSize : particleSizeDisplay,
+        sampleFactor : sampleFactorDisplay
+    };
+
+    const defaults = {
+        colour : '',
+        fontSize : 0,
+        particleSize : 0,
+        sampleFactor : 0
+    };
+
+    for (let key in defaults){
+        allInstances[key] = defaults[key]
+    }
 
     dropdown.addEventListener('change',chooseElement);
     function chooseElement(){
         chosenElement = dropdown.value;
         if (chosenElement ==='-1') {
+            instance = allInstances;
             allChosen = true;
-            colourField.value = null;
-            fontSizeField.value = null;
-            particleSizeField.value = null;
         } else {
             instance = allInstances[chosenElement];
             allChosen = false;
-            colourField.value = instance.colour;
-            fontSizeField.value = instance.fontSize;
-            particleSizeField.value = instance.particleSize;
+        }
+        for (let param in fields){
+            fields[param].value = instance[param];
+            displays[param].innerHTML = instance[param];
         }
     }
 
-    const fields = {
-        particleSize : particleSizeField,
-        fontSize : fontSizeField,
-        colour : colourField
-    };
-
-    const particleSizeButton = document.getElementById('setParticleSize');
-    const fontSizeButton = document.getElementById('setFontSize');
-    const colourButton = document.getElementById('setColour');
-    particleSizeButton.addEventListener('click', function(){changeParam('particleSize')});
-    fontSizeButton.addEventListener('click', function(){changeParam('fontSize')});
-    colourButton.addEventListener('click', function(){changeParam('colour')});
+    colourField.addEventListener('change', function(){changeParam('colour')});
+    fontSizeField.addEventListener('input', function(){changeParam('fontSize')});
+    particleSizeField.addEventListener('input', function(){changeParam('particleSize')});
+    sampleFactorField.addEventListener('input', function(){changeParam('sampleFactor')});
 
     function changeParam(paramName){
         if (fields[paramName].value !== '') {
             if (allChosen) {
                 for (let i = 0; i < allInstances.length; i++) {
                     allInstances[i][paramName] = fields[paramName].value;
-                    if (paramName === 'fontSize'){
-                        allInstances[i].updateText(); //inexplicably breaks when called from setter function
-                    }
                 }
+                displays[paramName].innerHTML = allInstances[0][paramName];
             } else {
-                instance[paramName] = fields[paramName].value;
-                if (paramName === 'fontSize'){
-                    instance.updateText(); //inexplicably breaks when called from setter function
-                }
+                displays[paramName].innerHTML = instance[paramName];
             }
+            instance[paramName] = fields[paramName].value;
         }
     }
-    //TODO: samplerate
+
     document.getElementById('params_form').addEventListener('submit', function (event){
         event.preventDefault();
     });
