@@ -12,7 +12,7 @@ let chosenElement = '-1';
 let instance = allInstances;
 
 function preload(){
-    font = loadFont('AvenirNextLTPro-Demi.otf');
+    font = loadFont('AvenirNextLTPro-Demi.otf'); //must be loaded first
 }
 //end general
 
@@ -24,7 +24,7 @@ let clock;
 //Example 3: Dynamic sequence
 let ltr;
 let count = 0;
-let alphaString = String.fromCharCode(65 + count);
+let alphaString = String.fromCharCode(65 + count); //convert 65 to ASCII => 'A'
 let prevSec, currSec;
 //Example 4: Loop
 let texts = [];
@@ -32,12 +32,11 @@ let texts = [];
 
 function setup() {
 
-
     //begin required
+    //create canvas in specified div element:
     const canvas_div = select('#canvas_div');
     canvas = createCanvas(max(canvas_div.width, canvas_width_min), canvas_height);
     canvas.parent('canvas_div');
-    background(bgcolour, 255 *(1 - blur_percent/100));
     //end required
 
     //begin example
@@ -52,7 +51,12 @@ function setup() {
     const cols = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
     let textsBounds = [1,6]; //min 1, max 6
     for (let i = textsBounds[0]; i <= textsBounds[1] ; i++) {
-        texts.push(new ParticleString('loop'+(i), font, {x : 100+20*Math.pow(i,2), y : 400, fontSize : i*10, colour : cols[i-1]}));
+        texts.push(new ParticleString('loop'+(i), font, {
+            x : 100+20*Math.pow(i,2),
+            y : 400,
+            fontSize : i*10,
+            colour : cols[i-1]
+        }));
     }
     //end example
 
@@ -62,12 +66,11 @@ function setup() {
         dropdown.options[dropdown.options.length] = new Option(allInstances[i].id, i.toString());
     }
 
-    windowResized(); //initial sizing happens too early to account for vertical scrollbars taking up width, so resize now
 }
 
 function draw() {
     //begin required
-    background(bgcolour, 255 *(1 - blur_percent/100));
+    background(bgcolour, 255 *(1 - blur_percent/100)); // bg opacity related to blur percent
     //end required
 
     //begin example
@@ -77,11 +80,11 @@ function draw() {
     clock.draw();
     //Example 3: Dynamic Sequence
     currSec = second();
-    if (prevSec !== currSec){
+    if (prevSec !== currSec){ //only run once per second
         prevSec = currSec;
-        count = (count + 1) % 26;
+        count = (count + 1) % 26; //loop through numbers (-> letters) 1 to 26
         alphaString = String.fromCharCode(65 + count);
-        ltr.updateText(alphaString);
+        ltr.updateText(alphaString); //update with new letter
     }
     ltr.draw();
     //Example 4: Loop
@@ -97,8 +100,9 @@ function windowResized() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    let allChosen = true;
+    let allChosen = true; //initialise
 
+    //reference elements in variablesL
     const dropdown = document.getElementById('element');
 
     const colourField = document.getElementById('colour');
@@ -106,17 +110,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const particleSizeField = document.getElementById('particleSize');
     const sampleFactorField = document.getElementById('sampleFactor');
 
+    const colourDisplay = document.getElementById('colourDisplay');
+    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+    const particleSizeDisplay = document.getElementById('particleSizeDisplay');
+    const sampleFactorDisplay = document.getElementById('sampleFactorDisplay');
+
+    //associate elements, defaults with param names for later iteration and potential for further extension
     const fields = {
         colour : colourField,
         fontSize : fontSizeField,
         particleSize : particleSizeField,
         sampleFactor : sampleFactorField
     };
-
-    const colourDisplay = document.getElementById('colourDisplay');
-    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
-    const particleSizeDisplay = document.getElementById('particleSizeDisplay');
-    const sampleFactorDisplay = document.getElementById('sampleFactorDisplay');
 
     const displays = {
         colour : colourDisplay,
@@ -132,11 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
         sampleFactor : 0
     };
 
+    // allInstances acts as a dummy element to remember values applied to all instances simultaneously
+    // initialise values to defaults:
     for (let key in defaults){
         allInstances[key] = defaults[key];
     }
 
     dropdown.addEventListener('change',chooseElement);
+    // set chosen instance, and thus get its current values for display:
     function chooseElement(){
         chosenElement = dropdown.value;
         if (chosenElement ==='-1') {
@@ -159,20 +167,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function changeParam(paramName){
         if (fields[paramName].value !== '') {
-            if (allChosen) {
+            if (allChosen) { // iterate through and set allInstances[i].parameter for all i
                 for (let i = 0; i < allInstances.length; i++) {
-                    allInstances[i][paramName] = fields[paramName].value;
+                    allInstances[i][paramName] = fields[paramName].value; //set parameter for current instance
                 }
-                displays[paramName].innerHTML = allInstances[0][paramName];
+                // get the value to set from the first element because they now all have the same value
+                displays[paramName].innerHTML = allInstances[0][paramName]; // change text to show value
             } else {
-                displays[paramName].innerHTML = instance[paramName];
+                displays[paramName].innerHTML = instance[paramName]; // change text to show value
             }
-            instance[paramName] = fields[paramName].value;
+            instance[paramName] = fields[paramName].value; //set parameter for chosen instance
         }
     }
 
     document.getElementById('params_form').addEventListener('submit', function (event){
-        event.preventDefault();
+        event.preventDefault(); //prevent page refresh when pressing Enter
     });
 
 });
