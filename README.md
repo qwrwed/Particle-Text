@@ -6,14 +6,14 @@ To construct: `new particleString(string, font, [args], [renderer])`
 The global variable `allInstances` exists; it is an array of all created instances
 of `ParticleString` and can be accessed as such (e.g. `allInstances[0].colour`). 
 ### `ParticleString` Fields
-####`string`
+#### `string`
 The text to display in the particle string.
-####`font`
+#### `font`
 The loaded font to use for the particle string. Running `font = loadFont(fontName)`
 (replacing `fontName` with the appropriate string) in the `preload` function is highly
 recommended.
 
-####`args`
+#### `args`
 Optional object containing optional argument values in JSON format. If 
 any or all values are missing, corresponding defaults will be used.
 Example: `args = {x : 300, y : height/2, colour : 'orange'}`
@@ -37,17 +37,17 @@ Getters and setters are available for
 all attributes of `particleString` except for`font`, `x`, `y`, `posX` and `posY`.
 
 
-####`renderer`
+#### `renderer`
 Optional p5.Renderer object to draw to, e.g. `renderer = createGraphics()`  
 To leaves  `args` empty while still using a renderer, use `{}`:
 `new particleString(myString, myFont, {}, myRenderer)`
 
 ### `ParticleString` Methods 
-####`draw([renderer])`
+#### `draw([renderer])`
 Draw the particle string to the graphics object, or the renderer if it exists. 
 This should be called in the p5 draw() function.
 
-##`ParticleClock` Class
+## `ParticleClock` Class
 This class simply extends the `ParticleString` class. Syntax and methods are largely the same,
 except for the constructor: `new particleClock(font,[args],[renderer])`
 
@@ -57,16 +57,16 @@ A class to describe a single particle that will be attracted to a predetermined 
 (target) and repulsed from the mouse position (when this is near enough).  
 To construct: `new Vehicle(x,y,size,colour)`
 ### `Vehicle` Fields
-####`x`
+#### `x`
 The x-coordinate, in pixels, of the location of the particle at rest (the target).
-####`y`
+#### `y`
 The y-coordinate, in pixels, of the location of the particle at rest (the target).
-####`size`
+#### `size`
 The radius of the particle.
-####`colour`
+#### `colour`
 The colour of the particle. Due to how p5 works, this can be in a variety
 of formats; 'blue', '#00f', '0000ff' and rgb(0,0,255) are equivalent.
 ### `Vehicle` Methods
-####`draw([renderer])`
+#### `draw([renderer])`
 Update the visual and kinematic properties of the vehicle, and show them
 on the canvas (or the renderer, if optional parameter `renderer` is given).
