@@ -95,10 +95,6 @@ function draw() {
 
 }
 
-function windowResized() {
-    resizeCanvas(max(select('#canvas_div').width, canvas_width_min), canvas_height);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     let allChosen = true; //initialise
 
